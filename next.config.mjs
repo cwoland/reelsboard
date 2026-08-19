@@ -1,6 +1,5 @@
 /** @type {import('next').NextConfig} */
-const nextConfig = {
-  /* config options here */
+export default {
+  // pg тянет опциональные нативные модули — не бандлим его
+  serverExternalPackages: ['pg', 'bcryptjs'],
 };
-
-export default nextConfig;
