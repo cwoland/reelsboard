@@ -5,6 +5,9 @@ import { getKpi, getSeries, getTop } from '@/lib/queries';
 import { compact, agoRu, dateRu, proxy } from '@/lib/format';
 import Stat from '@/components/Stat';
 import AreaChart from '@/components/AreaChart';
+import {
+  Clapperboard, Eye, Heart, Sparkles, Flower2, Film, ArrowRight,
+} from 'lucide-react';
 import { Pill } from '@/components/Bits';
 import { RefreshButton } from '@/components/ReelsClient';
 
@@ -40,7 +43,10 @@ export default async function Dashboard({ searchParams }) {
     <>
       <header className="mb-6 flex flex-wrap items-end justify-between gap-4">
         <div>
-          <p className="text-sm text-mute">Привет, {owner?.display_name} ✿</p>
+          <p className="flex items-center gap-1.5 text-sm text-mute">
+            Привет, {owner?.display_name}
+            <Flower2 size={14} strokeWidth={2} className="text-rose" aria-hidden />
+          </p>
           <h1 className="font-display text-4xl">Дашборд</h1>
         </div>
         <div className="flex items-center gap-3">
@@ -50,12 +56,12 @@ export default async function Dashboard({ searchParams }) {
       </header>
 
       <section className="mb-6 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-        <Stat label="Рилсов" value={kpi.reels} emoji="🎀" tone="rose" delay={0} />
-        <Stat label="Просмотров" value={kpi.views} emoji="👀" tone="grape"
+        <Stat label="Рилсов" value={kpi.reels} icon={Clapperboard} tone="rose" delay={0} />
+        <Stat label="Просмотров" value={kpi.views} icon={Eye} tone="grape"
               sub={`в среднем ${compact(kpi.avg_views)} на рилс`} delay={60} />
-        <Stat label="Лайков" value={kpi.likes} emoji="💗" tone="rose"
+        <Stat label="Лайков" value={kpi.likes} icon={Heart} tone="rose"
               sub={`${compact(kpi.comments)} комментариев`} delay={120} />
-        <Stat label="Вовлечённость" value={er} emoji="✨" tone="mint"
+        <Stat label="Вовлечённость" value={er} icon={Sparkles} tone="mint"
               sub="(лайки + комменты) / просмотры" delay={180} />
       </section>
 
@@ -84,7 +90,9 @@ export default async function Dashboard({ searchParams }) {
                   <div className="h-12 w-9 shrink-0 overflow-hidden rounded-xl bg-shell">
                     {r.cover_url
                       ? <img src={proxy(r.cover_url)} alt="" className="h-full w-full object-cover" />
-                      : <div className="grid h-full place-items-center text-xs">🌸</div>}
+                      : <div className="grid h-full place-items-center text-rose/45">
+                          <Film size={14} strokeWidth={1.8} aria-hidden />
+                        </div>}
                   </div>
                   <div className="min-w-0 flex-1">
                     <a href={r.url} target="_blank" rel="noreferrer"
@@ -112,7 +120,9 @@ export default async function Dashboard({ searchParams }) {
             Вставь ссылку из Instagram — обложка, дата и просмотры подтянутся сами
           </div>
         </div>
-        <span className="grid h-12 w-12 shrink-0 place-items-center rounded-full bg-rose text-xl text-white">→</span>
+        <span className="grid h-12 w-12 shrink-0 place-items-center rounded-full bg-rose text-white">
+          <ArrowRight size={20} strokeWidth={2.2} aria-hidden />
+        </span>
       </Link>
     </>
   );

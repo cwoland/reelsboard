@@ -1,3 +1,5 @@
+import { Flower2 } from 'lucide-react';
+
 export function Pill({ children, tone = 'blush' }) {
   const tones = {
     blush: 'bg-blush/70 text-plum',
@@ -35,10 +37,12 @@ export function Field({ label, ...p }) {
   );
 }
 
-export function Empty({ emoji = '🌷', title, hint }) {
+export function Empty({ icon: Icon = Flower2, title, hint }) {
   return (
-    <div className="card flex flex-col items-center gap-2 px-6 py-16 text-center">
-      <div className="text-4xl">{emoji}</div>
+    <div className="card flex flex-col items-center gap-3 px-6 py-16 text-center">
+      <div className="grid h-14 w-14 place-items-center rounded-full bg-blush/50 text-rose">
+        <Icon size={26} strokeWidth={1.75} aria-hidden />
+      </div>
       <div className="font-display text-xl">{title}</div>
       {hint && <div className="max-w-sm text-sm text-mute">{hint}</div>}
     </div>

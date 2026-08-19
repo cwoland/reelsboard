@@ -2,6 +2,9 @@ import { currentUser, scopeUserId } from '@/lib/auth';
 import { getSeries, getGrowth, getBestDays, getKpi } from '@/lib/queries';
 import { compact, nf, dateRu, DOW, proxy } from '@/lib/format';
 import AreaChart from '@/components/AreaChart';
+import {
+  ChartColumn, Rocket, Sparkles, Activity, CalendarDays, Film,
+} from 'lucide-react';
 import { Pill, Empty } from '@/components/Bits';
 import Stat from '@/components/Stat';
 
@@ -17,7 +20,7 @@ export default async function Analytics({ searchParams }) {
     getSeries(uid, days), getGrowth(uid), getBestDays(uid), getKpi(uid),
   ]);
 
-  if (!growth.length) return <Empty emoji="📊" title="Аналитики пока нет" hint="Добавь рилсы — и здесь появятся графики, приросты и лучший день для публикации." />;
+  if (!growth.length) return <Empty icon={ChartColumn} title="Аналитики пока нет" hint="Добавь рилсы — и здесь появятся графики, приросты и лучший день для публикации." />;
 
   const maxDow = Math.max(...best.map(b => Number(b.avg_views)), 1);
   const champion = [...best].sort((a, b) => b.avg_views - a.avg_views)[0];
@@ -42,10 +45,10 @@ export default async function Analytics({ searchParams }) {
       </header>
 
       <section className="mb-6 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-        <Stat label="Прирост за 7 дней" value={total7} emoji="🚀" tone="grape" sub="суммарно по всем рилсам" />
-        <Stat label="Средний ER"        value={avgEr} emoji="✨" tone="mint" sub="в процентах" />
-        <Stat label="Медиана просмотров" value={median(growth.map(r => Number(r.views)))} emoji="📈" tone="rose" />
-        <Stat label="Лучший день"       value={champion ? DOW[champion.dow - 1] : '—'} emoji="🗓" tone="rose"
+        <Stat label="Прирост за 7 дней" value={total7} icon={Rocket} tone="grape" sub="суммарно по всем рилсам" />
+        <Stat label="Средний ER"        value={avgEr} icon={Sparkles} tone="mint" sub="в процентах" />
+        <Stat label="Медиана просмотров" value={median(growth.map(r => Number(r.views)))} icon={Activity} tone="rose" />
+        <Stat label="Лучший день"       value={champion ? DOW[champion.dow - 1] : '—'} icon={CalendarDays} tone="rose"
               sub={champion ? `${compact(champion.avg_views)} просмотров в среднем` : null} />
       </section>
 
@@ -94,8 +97,11 @@ export default async function Analytics({ searchParams }) {
                 <td className="px-6 py-3">
                   <div className="flex items-center gap-3">
                     <div className="h-12 w-9 shrink-0 overflow-hidden rounded-xl bg-shell">
-                      {r.cover_url ? <img src={proxy(r.cover_url)} alt="" className="h-full w-full object-cover" />
-                                   : <div className="grid h-full place-items-center text-xs">🌸</div>}
+                      {r.cover_url
+                        ? <img src={proxy(r.cover_url)} alt="" className="h-full w-full object-cover" />
+                        : <div className="grid h-full place-items-center text-rose/45">
+                            <Film size={14} strokeWidth={1.8} aria-hidden />
+                          </div>}
                     </div>
                     <a href={r.url} target="_blank" rel="noreferrer" className="line-clamp-1 max-w-sm font-medium hover:text-rose">
                       {r.caption?.trim() || 'Без описания'}

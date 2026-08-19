@@ -1,6 +1,7 @@
 'use client';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { Flower2 } from 'lucide-react';
 import { Button, Field } from '@/components/Bits';
 
 export default function Login() {
@@ -27,7 +28,9 @@ export default function Login() {
     <main className="grid min-h-screen place-items-center p-5">
       <div className="w-full max-w-sm">
         <div className="mb-7 text-center">
-          <div className="mx-auto mb-4 grid h-16 w-16 place-items-center rounded-3xl bg-gradient-to-br from-rose to-grape text-2xl text-white shadow-[0_18px_40px_-18px_#F2779E]">✿</div>
+          <div className="mx-auto mb-4 grid h-16 w-16 place-items-center rounded-3xl bg-gradient-to-br from-rose to-grape text-white shadow-[0_18px_40px_-18px_#F2779E]">
+            <Flower2 size={30} strokeWidth={1.9} aria-hidden />
+          </div>
           <h1 className="font-display text-4xl">Reels<span className="text-rose">board</span></h1>
           <p className="mt-1 text-sm text-mute">Кабинет и аналитика для наших блогеров</p>
         </div>

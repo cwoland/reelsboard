@@ -2,6 +2,10 @@
 import { useState, useTransition } from 'react';
 import { useRouter } from 'next/navigation';
 import { compact, nf, dateRu, agoRu, proxy } from '@/lib/format';
+import {
+  RefreshCw, Link2, Film, X, LayoutGrid, Table2,
+  Heart, MessageCircle, Search, Clapperboard,
+} from 'lucide-react';
 import { Button, Pill, Empty } from './Bits';
 
 export function RefreshButton({ ids = null, small = false }) {
@@ -22,16 +26,18 @@ export function RefreshButton({ ids = null, small = false }) {
 
   if (small)
     return (
-      <button onClick={run} disabled={busy} title="Обновить"
-        className="grid h-8 w-8 place-items-center rounded-full bg-white/85 text-sm shadow-sm transition hover:bg-white disabled:opacity-50">
-        <span className={busy ? 'inline-block animate-spin' : ''}>⟳</span>
+      <button onClick={run} disabled={busy} title="Обновить" aria-label="Обновить"
+        className="grid h-8 w-8 place-items-center rounded-full bg-white/85 text-plum shadow-sm transition hover:bg-white hover:text-rose disabled:opacity-50">
+        <RefreshCw size={14} strokeWidth={2} className={busy ? 'animate-spin' : ''} aria-hidden />
       </button>
     );
 
-  return <Button onClick={run} disabled={busy} variant="soft">
-    <span className={busy ? 'inline-block animate-spin' : ''}>⟳</span>
-    {busy ? 'Обновляю…' : 'Обновить всё'}
-  </Button>;
+  return (
+    <Button onClick={run} disabled={busy} variant="soft">
+      <RefreshCw size={15} strokeWidth={2.2} className={busy ? 'animate-spin' : ''} aria-hidden />
+      {busy ? 'Обновляю…' : 'Обновить всё'}
+    </Button>
+  );
 }
 
 export default RefreshButton;
@@ -53,14 +59,14 @@ export function AddReelForm() {
     setBusy(false);
     if (!res.ok) return setMsg({ bad: true, text: data.error });
     setInput('');
-    setMsg({ text: `Готово: добавлено ${data.added}${data.failed ? `, не открылось ${data.failed}` : ''} 🌸` });
+    setMsg({ text: `Готово: добавлено ${data.added}${data.failed ? `, не открылось ${data.failed}` : ''}` });
     router.refresh();
   }
 
   return (
     <form onSubmit={submit} className="card rise p-5">
       <div className="mb-3 flex items-center gap-2">
-        <span className="text-lg">🔗</span>
+        <Link2 size={19} strokeWidth={2} className="text-rose" aria-hidden />
         <h2 className="font-display text-xl">Добавить рилсы</h2>
         <span className="text-xs text-mute">до 10 ссылок за раз</span>
       </div>
@@ -96,7 +102,9 @@ function Cover({ r, className = '' }) {
     <div className={`relative overflow-hidden bg-gradient-to-br from-blush/60 to-lilac ${className}`}>
       {r.cover_url
         ? <img src={proxy(r.cover_url)} alt="" loading="lazy" className="h-full w-full object-cover" />
-        : <div className="grid h-full place-items-center text-3xl opacity-60">🎀</div>}
+        : <div className="grid h-full place-items-center text-rose/45">
+            <Film size={26} strokeWidth={1.6} aria-hidden />
+          </div>}
       {r.duration ? (
         <span className="absolute bottom-2 right-2 rounded-pill bg-plum/70 px-2 py-0.5 text-[10px] font-semibold text-white">
           {Math.floor(r.duration / 60)}:{String(Math.round(r.duration % 60)).padStart(2, '0')}
@@ -123,8 +131,12 @@ export function ReelsView({ reels }) {
   return (
     <>
       <div className="mb-4 flex flex-wrap items-center gap-2">
-        <input value={q} onChange={e => setQ(e.target.value)} placeholder="Поиск по описанию…"
-          className="min-w-[180px] flex-1 rounded-pill border border-line bg-white/80 px-4 py-2 text-sm outline-none focus:border-rose/60" />
+        <div className="relative min-w-[180px] flex-1">
+          <Search size={15} strokeWidth={2}
+                  className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-mute" aria-hidden />
+          <input value={q} onChange={e => setQ(e.target.value)} placeholder="Поиск по описанию…"
+            className="w-full rounded-pill border border-line bg-white/80 py-2 pl-10 pr-4 text-sm outline-none focus:border-rose/60" />
+        </div>
         <select value={sort} onChange={e => setSort(e.target.value)}
           className="rounded-pill border border-line bg-white/80 px-4 py-2 text-sm outline-none">
           <option value="date">Сначала новые</option>
@@ -132,16 +144,18 @@ export function ReelsView({ reels }) {
           <option value="likes">По лайкам</option>
         </select>
         <div className="flex rounded-pill bg-white/70 p-1">
-          {[['grid', '🖼 Лента'], ['table', '🗂 Таблица']].map(([k, l]) => (
+          {[['grid', 'Лента', LayoutGrid], ['table', 'Таблица', Table2]].map(([k, l, Icon]) => (
             <button key={k} onClick={() => setMode(k)}
-              className={`rounded-pill px-4 py-1.5 text-xs font-semibold transition ${mode === k ? 'bg-blush text-plum' : 'text-mute'}`}>
+              className={`flex items-center gap-1.5 rounded-pill px-4 py-1.5 text-xs font-semibold transition
+                ${mode === k ? 'bg-blush text-plum' : 'text-mute hover:text-plum'}`}>
+              <Icon size={14} strokeWidth={2} aria-hidden />
               {l}
             </button>
           ))}
         </div>
       </div>
 
-      {list.length === 0 && <Empty title="Здесь пока пусто" hint="Вставь ссылку на reels выше — всё остальное подтянется само." />}
+      {list.length === 0 && <Empty icon={Clapperboard} title="Здесь пока пусто" hint="Вставь ссылку на reels выше — всё остальное подтянется само." />}
 
       {mode === 'grid' && list.length > 0 && (
         <div className={`grid gap-4 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 ${pending ? 'opacity-60' : ''}`}>
@@ -151,8 +165,10 @@ export function ReelsView({ reels }) {
                 <Cover r={r} className="aspect-[4/5]" />
                 <div className="absolute right-2 top-2 flex gap-1.5 opacity-0 transition group-hover:opacity-100">
                   <RefreshButton ids={[r.id]} small />
-                  <button onClick={() => remove(r.id)} title="Удалить"
-                    className="grid h-8 w-8 place-items-center rounded-full bg-white/85 text-sm shadow-sm hover:bg-white hover:text-rose">✕</button>
+                  <button onClick={() => remove(r.id)} title="Удалить" aria-label="Удалить"
+                    className="grid h-8 w-8 place-items-center rounded-full bg-white/85 text-plum shadow-sm transition hover:bg-white hover:text-rose">
+                    <X size={14} strokeWidth={2.2} aria-hidden />
+                  </button>
                 </div>
                 {r.status === 'error' && (
                   <span className="absolute left-2 top-2"><Pill tone="warn">ошибка</Pill></span>
@@ -168,9 +184,15 @@ export function ReelsView({ reels }) {
                     <div className="font-display text-3xl leading-none">{compact(r.views)}</div>
                     <div className="text-[11px] text-mute">просмотров</div>
                   </div>
-                  <div className="text-right text-xs text-mute">
-                    <div>💗 {compact(r.likes)}</div>
-                    <div>💬 {compact(r.comments)}</div>
+                  <div className="flex flex-col items-end gap-1 text-xs text-mute">
+                    <span className="flex items-center gap-1.5">
+                      <Heart size={13} strokeWidth={2} className="text-rose" aria-hidden />
+                      {compact(r.likes)}
+                    </span>
+                    <span className="flex items-center gap-1.5">
+                      <MessageCircle size={13} strokeWidth={2} className="text-grape" aria-hidden />
+                      {compact(r.comments)}
+                    </span>
                   </div>
                 </div>
                 <div className="mt-3 flex items-center justify-between border-t border-line pt-3 text-[11px] text-mute">
@@ -219,8 +241,10 @@ export function ReelsView({ reels }) {
                     <td className="p-3">
                       <div className="flex justify-end gap-1.5">
                         <RefreshButton ids={[r.id]} small />
-                        <button onClick={() => remove(r.id)}
-                          className="grid h-8 w-8 place-items-center rounded-full bg-white/85 text-sm hover:text-rose">✕</button>
+                        <button onClick={() => remove(r.id)} aria-label="Удалить"
+                          className="grid h-8 w-8 place-items-center rounded-full bg-white/85 text-plum transition hover:text-rose">
+                          <X size={14} strokeWidth={2.2} aria-hidden />
+                        </button>
                       </div>
                     </td>
                   </tr>

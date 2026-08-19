@@ -1,6 +1,7 @@
 'use client';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { Plus, UserPlus } from 'lucide-react';
 import { Button, Field } from './Bits';
 
 export default function NewUserForm() {
@@ -25,11 +26,18 @@ export default function NewUserForm() {
   }
 
   if (!open)
-    return <Button variant="ghost" onClick={() => setOpen(true)}>＋ Добавить блогера</Button>;
+    return (
+      <Button variant="ghost" onClick={() => setOpen(true)}>
+        <Plus size={16} strokeWidth={2.4} aria-hidden /> Добавить блогера
+      </Button>
+    );
 
   return (
     <form onSubmit={submit} className="card rise p-5">
-      <h2 className="mb-4 font-display text-xl">Новый блогер</h2>
+      <h2 className="mb-4 flex items-center gap-2 font-display text-xl">
+        <UserPlus size={18} strokeWidth={2} className="text-rose" aria-hidden />
+        Новый блогер
+      </h2>
       <div className="grid gap-3 sm:grid-cols-2">
         <Field label="Имя"     value={f.name}     onChange={on('name')}     placeholder="Катя" />
         <Field label="Ник в IG" value={f.handle}  onChange={on('handle')}   placeholder="katya.reels" />

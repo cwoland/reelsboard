@@ -1,5 +1,6 @@
 'use client';
 import { useState } from 'react';
+import { Sprout } from 'lucide-react';
 import { compact } from '@/lib/format';
 
 function smooth(pts) {
@@ -17,7 +18,12 @@ export default function AreaChart({ data = [], yKey = 'views', label = 'Прос
   const W = 720, H = height, PAD = 14;
 
   if (data.length < 2)
-    return <div className="grid h-56 place-items-center text-sm text-mute">Данных пока мало — обнови рилсы завтра, и график оживёт 🌸</div>;
+    return (
+      <div className="flex h-56 flex-col items-center justify-center gap-2 text-sm text-mute">
+        <Sprout size={22} strokeWidth={1.75} className="text-rose/60" aria-hidden />
+        Данных пока мало — обнови рилсы завтра, и график оживёт
+      </div>
+    );
 
   const vals = data.map(d => Number(d[yKey]) || 0);
   const max = Math.max(...vals), min = Math.min(...vals);
